@@ -1,5 +1,6 @@
-from GetAllDanmuInfo import GetAllDanmuInfo
-import platform
+from GetAllDanmuInfo_V2 import GetAllDanmuInfo
+from GetClearCommandInstruction import GetClearCommandInstruction
+from GetVideoTitle import GetVideoTitle
 import os
 
 headers = {
@@ -11,8 +12,20 @@ headers = {
         'Referer': 'https://www.bilibili.com'
 }
 
+def FromUrlGetAidOrBvid(video_url):
+    base_url_list = [
+        "https://www.bilibili.com/bangumi/play/ss",
+        "https://www.bilibili.com/bangumi/media/md",
+        "https://www.bilibili.com/video/",
+        "https://www.bilibili.com/bangumi/play/ep"
+    ]
+    if "http" in video_url:
+        for i in range(len(base_url_list)):
+            if base_url_list[i] in video_url:
+                return str(video_url).replace(base_url_list[i],"").split("?",1)[0].replace("/","")
+
 def Meum():
-    clear_comand_instruction = get_clear_comand_instruction()
+    clear_comand_instruction = GetClearCommandInstruction()
     print("B站全弹幕获取程序")
     print("作者：菠萝小西瓜(DNLINYJ)")
     print("Github：https://github.com/DNLINYJ")
@@ -25,16 +38,10 @@ def Meum():
     if user_input == "1":
         os.system(clear_comand_instruction)
         user_input = str(input(">>"))
-        if type(GetAllDanmuInfo(user_input, headers)) == int:
-            print("从B站获取历史弹幕数据发生错误")
+        if GetAllDanmuInfo(user_input, headers) != 0:
+            print(f"获取视频{GetVideoTitle()}")
+        else:
+            print
 
-def get_clear_comand_instruction():
-    a = platform.system()
-    if a == "Linux":
-        return "clear"
-    elif a == "Windows":
-        return "cls"
-    else:
-        return "clear"
 
 Meum()

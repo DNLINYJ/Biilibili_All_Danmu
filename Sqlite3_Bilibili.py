@@ -149,7 +149,7 @@ class Bilibili_Danmu_Index_Server():
         return self.cur.fetchall()
     
     def Set_Archive_point(self, time_str, cid):
-        self.cur.execute(f"UPDATE COMPANY SET Archive_point = '{time_str}' WHERE cid = {int(cid)}")
+        self.cur.execute(f"UPDATE Danmu_Database_Info SET Archive_point = '{time_str}' WHERE cid = {int(cid)}")
         self.server_connent.commit()
 
     def Close_Database(self):
