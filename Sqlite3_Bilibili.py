@@ -1,3 +1,4 @@
+from ExportAllDanmu import ExportAllDanmu
 import sqlite3
 import time
 import bv_dec_or_enc as bv
@@ -145,12 +146,34 @@ class Bilibili_Danmu_Index_Server():
         else:
             bvid = bv.enc(int(str(id_).upper().replace("AV","")))
 
-        self.cur.execute(f"select * FROM Danmu_Database_Info WHERE bvid = '{bvid}'")
-        return self.cur.fetchall()
-    
+        try:
+            self.cur.execute(f"select * FROM Danmu_Database_Info WHERE bvid = '{bvid}'")
+            return self.cur.fetchall()
+        except:
+            return None
+
+    def ReadLastEndTime(self, id_):
+        if 'BV' in str(id_):
+            bvid = id_
+        else:
+            bvid = bv.enc(int(str(id_).upper().replace("AV","")))
+
+        try:
+            self.cur.execute(f"select Archive_point FROM Danmu_Database_Info WHERE bvid = '{bvid}'")
+            return self.cur.fetchall()
+        except:
+            return None
+
     def Set_Archive_point(self, time_str, cid):
         self.cur.execute(f"UPDATE Danmu_Database_Info SET Archive_point = '{time_str}' WHERE cid = {int(cid)}")
         self.server_connent.commit()
+
+    def GetAllVideoDatabaseName(self):
+        try:
+            self.cur.execute("select * FROM Danmu_Database_Info")
+            return self.cur.fetchall()
+        except:
+            return None
 
     def Close_Database(self):
         self.server_connent.close()

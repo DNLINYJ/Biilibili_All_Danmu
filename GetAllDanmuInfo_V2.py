@@ -47,12 +47,19 @@ def GetAllDanmuInfo(id_, headers):
     end_time_year = int(time.strftime('%Y',time.localtime(time.time())))
     end_time_month = int(time.strftime('%m',time.localtime(time.time())))
     end_time_day = int(time.strftime('%d',time.localtime(time.time())))
-
+    
     # 初始化历史弹幕数据库和索引数据库 数据库用户名和密码默认为 root/root
     # 历史弹幕数据库
     Database = Sqlite3_Bilibili.Bilibili_Danmu_Server("root", "root", f"{str(cid_num)}.db")
     # 索引数据库
     Index_Database = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server("root", "root")
+
+    # 若数据库中有现处理视频的数据，读取上次最后写入的历史弹幕的日期
+    ReadLastEndTime = Index_Database.ReadLastEndTime(bvid)
+    if ReadLastEndTime != None:
+        start_time_year = int(re.findall(r"(\d{4})", ReadLastEndTime[0][0])[0])
+        start_time_month = int(re.findall(r"(-\d{1,2})", ReadLastEndTime[0][0])[0].replace("-",""))
+        start_time_day = int(re.findall(r"(-\d{1,2})", ReadLastEndTime[0][0])[1].replace("-",""))
 
     # 远程构建时间范围列表
     Time_list = RemoteBulitTimeList(
