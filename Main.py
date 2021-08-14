@@ -1,5 +1,6 @@
 from GetAllDanmuInfo import GetAllDanmuInfo
 import platform
+import os
 
 headers = {
         'cookie': "",
@@ -21,7 +22,11 @@ def Meum():
     print("2) 导出指定视频全部历史弹幕")
     print("3) 收集并导出指定视频全部历史弹幕(数据量较大时所用时间较久)")
     user_input = str(input(">>"))
-    GetAllDanmuInfo("BV1wo4y1U7VS", headers)
+    if user_input == "1":
+        os.system(clear_comand_instruction)
+        user_input = str(input(">>"))
+        if type(GetAllDanmuInfo(user_input, headers)) == int:
+            print("从B站获取历史弹幕数据发生错误")
 
 def get_clear_comand_instruction():
     a = platform.system()
@@ -31,3 +36,5 @@ def get_clear_comand_instruction():
         return "cls"
     else:
         return "clear"
+
+Meum()

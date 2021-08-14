@@ -40,22 +40,44 @@ class Bilibili_Danmu_Server():
         # idStr    TEXT                 弹幕dmid
 
         # Process Danmu Info Data
-        data = str()
-        data_keys = list(damnu_data.keys())
-        for i in data_keys:
-            if i == len(data_keys) - 1:
-                if type(damnu_data[i]) == str:
-                    data = data + f"'{damnu_data[i]}'"
+        Check_Completeness = dict()
+        try:
+            Check_Completeness = {
+                                "id" : damnu_data["id"],
+                                "progress" : damnu_data["progress"],
+                                "mode" : damnu_data["mode"],
+                                "fontsize" : damnu_data["fontsize"],
+                                "color" : damnu_data["color"],
+                                "midHash" : damnu_data["midHash"],
+                                "content" : damnu_data["content"],
+                                "ctime" : damnu_data["ctime"],
+                                "idStr" : damnu_data["idStr"],
+                                }
+        except:
+            return None
+            
+        if Check_Completeness != {}:
+            data = str()
+            data_keys = list(Check_Completeness.keys())
+            for i in data_keys:
+                if i == "idStr":
+                    if type(Check_Completeness[i]) == str:
+                        data = data + f"'{Check_Completeness[i]}'"
+                    else:
+                        data = data + str(Check_Completeness[i])
                 else:
-                    data = data + str(damnu_data[i])
-            else:
-                if type(damnu_data[i]) == str:
-                    data = data + f"'{damnu_data[i]}',"
-                else:
-                    data = data + str(damnu_data[i]) + ","
+                    if type(Check_Completeness[i]) == str:
+                        data = data + f"'{Check_Completeness[i]}',"
+                    else:
+                        data = data + str(Check_Completeness[i]) + ","
+        else:
+            return None
 
         # Add Danmu Data to Server
-        self.cur.execute('INSERT OR IGNORE INTO ' + "Danmu_"+TABLE_time + ' VALUES (NULL, %s)' % data[0:-1])
+        try:
+            self.cur.execute('INSERT OR IGNORE INTO ' + "Danmu_"+TABLE_time + ' VALUES (NULL, %s)' % data)
+        except:
+            return None
         self.server_connent.commit()
 
     def Read_All_TABLE(self):
@@ -86,16 +108,17 @@ class Bilibili_Danmu_Index_Server():
         self.cur = self.server_connent.cursor()
 
     def Add_Danmu_Database_Info(self, Danmu_Database_Info):
-        init_sql = f"CREATE TABLE IF NOT EXISTS Danmu_Database_Info(cid INTEGER PRIMARY KEY, title TEXT, aid INTEGER, bvid TEXT, UNIQUE(cid))"
+        init_sql = f"CREATE TABLE IF NOT EXISTS Danmu_Database_Info(cid INTEGER PRIMARY KEY, title TEXT, aid INTEGER, bvid TEXT, Archive_point TEXT, UNIQUE(cid))"
         
         # Init Server Table
         self.cur.execute(init_sql)
         self.server_connent.commit()
 
-        # cid      INTEGER PRIMARY KEY  视频CID号
-        # title    TEXT                 视频标题
-        # aid      INTEGER              视频AV号
-        # bvid     TEXT                 视频BVID
+        # cid           INTEGER PRIMARY KEY  视频CID号
+        # title         TEXT                 视频标题
+        # aid           INTEGER              视频AV号
+        # bvid          TEXT                 视频BVID
+        # Archive_point TEXT                 弹幕存储的最后日期
 
         # Process Danmu Info Data
         data = str()
@@ -124,6 +147,10 @@ class Bilibili_Danmu_Index_Server():
 
         self.cur.execute(f"select * FROM Danmu_Database_Info WHERE bvid = '{bvid}'")
         return self.cur.fetchall()
+    
+    def Set_Archive_point(self, time_str, cid):
+        self.cur.execute(f"UPDATE COMPANY SET Archive_point = '{time_str}' WHERE cid = {int(cid)}")
+        self.server_connent.commit()
 
     def Close_Database(self):
         self.server_connent.close()
