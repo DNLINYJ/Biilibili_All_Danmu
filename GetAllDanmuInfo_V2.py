@@ -7,8 +7,7 @@ from GetVideoTitle import GetVideoTitle
 from LocalBulitTimeList import LocalBulitTimeList
 from RemoteBulitTimeList import RemoteBulitTimeList
 import dm_protobuf.dm_pb2 as dm_pb2
-import google.protobuf.text_format as text_format
-import json
+from google.protobuf.json_format import MessageToDict
 import Sqlite3_Bilibili
 
 #关闭requests模块的InsecureRequestWarning警告提示
@@ -21,7 +20,7 @@ def GetAllDanmuInfo(id_, headers):
     if 'BV' in str(id_):
         bvid = id_
     else:
-        bvid = bv.enc(str(id_).upper().replace("AV",""))
+        bvid = bv.enc(int(str(id_).upper().replace("AV","")))
 
     # 获得视频投稿时间
     web_url = f"https://www.bilibili.com/video/{bvid}"
@@ -56,7 +55,7 @@ def GetAllDanmuInfo(id_, headers):
 
     # 若数据库中有现处理视频的数据，读取上次最后写入的历史弹幕的日期
     ReadLastEndTime = Index_Database.ReadLastEndTime(bvid)
-    if ReadLastEndTime != None:
+    if ReadLastEndTime != None and ReadLastEndTime != []:
         start_time_year = int(re.findall(r"(\d{4})", ReadLastEndTime[0][0])[0])
         start_time_month = int(re.findall(r"(-\d{1,2})", ReadLastEndTime[0][0])[0].replace("-",""))
         start_time_day = int(re.findall(r"(-\d{1,2})", ReadLastEndTime[0][0])[1].replace("-",""))
@@ -72,7 +71,7 @@ def GetAllDanmuInfo(id_, headers):
     )
 
     # 若远程构建时间范围列表出现B站服务器拒绝访问，使用本地构建
-    if Time_list == None:
+    if Time_list == None or Time_list == []:
         Time_list = LocalBulitTimeList(
             start_time_year,
             start_time_month,
@@ -91,10 +90,14 @@ def GetAllDanmuInfo(id_, headers):
         "Archive_point": str(Time_list[0])}
     Index_Database.Add_Danmu_Database_Info(Index_Database_Data)
 
+    # 设置一个假栈,用于还原变量
+    Stack = list()
+
     # 遍布时间列表，获取历史弹幕
     for i in Time_list:
         # 输出日志
         print(f"正在获取视频:{Video_title} 于{str(i)} 的历史弹幕")
+        Stack.append(str(i))
 
         # 设置最后读取的历史弹幕的日期, 便于断点续传
         Index_Database.Set_Archive_point(str(i), cid_num)
@@ -131,23 +134,20 @@ def GetAllDanmuInfo(id_, headers):
         # 使用Protobuf脚本解码B站弹幕文件
         # From 1:https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/danmaku/history.md
         # From 2:https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/grpc_api/bilibili/community/service/dm/v1/dm.proto
+        # From 3:https://stackoverflow.com/questions/19734617/protobuf-to-json-in-python
         danmaku_seg = dm_pb2.DmSegMobileReply()
         danmaku_seg.ParseFromString(req.content)
 
         # 将弹幕文件解码为数据库支持的格式
         for i in range(len(danmaku_seg.elems)):
-            damnu_data = text_format.MessageToString(danmaku_seg.elems[i],as_utf8=True).replace("\n",",")[0:-1].split(",")
-            damnu_data_json = dict()
-            for a in damnu_data:
-                if len(a.split(": ")[1].split('"',1)) == 1:
-                    damnu_data_json[a.split(": ")[0]] = int(a.split(": ")[1])
-                else:
-                    damnu_data_json[a.split(": ")[0]] = a.split(": ")[1][1:-1]
-
+            damnu_data = MessageToDict(danmaku_seg.elems[i])
             # 将历史弹幕数据插入数据库
-            Database.Add_Danmu_Info(damnu_data_json)
+            Database.Add_Danmu_Info(damnu_data)
 
         # 输出日志
-        print(f"获取视频:{Video_title} 于{str(i)} 的历史弹幕成功")
+        print(f"获取视频:{Video_title} 于{str(Stack[0])} 的历史弹幕成功")
+
+        # 清空栈
+        Stack.clear()
 
     return 0

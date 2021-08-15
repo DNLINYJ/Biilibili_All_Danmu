@@ -10,8 +10,11 @@ def RemoteBulitTimeList(start_time_year, start_time_month, end_time_year, end_ti
         else:
             temp_start_time_month = str(start_time_month)
         get_time_url = "https://api.bilibili.com/x/v2/dm/history/index?type=1&oid=%s&month=%s-%s"%(str(cid_num),str(start_time_year),str(temp_start_time_month))
-        req = requests.get(url=get_time_url, headers = headers, verify=False)
-        if req.status_code == 412: # 当请求被412拒绝时，直接跳出使用本地生成
+        try:
+            req = requests.get(url=get_time_url, headers = headers, verify=False)
+        except:
+            return None
+        if req.status_code != 200: # 当请求被拒绝时，直接跳出使用本地生成
             return None
 
         if json.loads(req.text)['data'] != None:

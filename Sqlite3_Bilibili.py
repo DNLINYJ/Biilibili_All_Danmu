@@ -21,7 +21,7 @@ class Bilibili_Danmu_Server():
         self.cur = self.server_connent.cursor()
 
     def Add_Danmu_Info(self, damnu_data):
-        TABLE_time = time.strftime("%Y%m%d", time.localtime(damnu_data["ctime"]))
+        TABLE_time = time.strftime("%Y%m%d", time.localtime(int(damnu_data["ctime"])))
         init_sql = f"CREATE TABLE IF NOT EXISTS Danmu_{TABLE_time}(num INTEGER PRIMARY KEY, id INT8, progress INTEGER, mode INTEGER, fontsize INTEGER, color INTEGER, midHash TEXT, content TEXT, ctime INT8, idStr TEXT, UNIQUE(id))"
         
         # Init Server Table
@@ -44,14 +44,14 @@ class Bilibili_Danmu_Server():
         Check_Completeness = dict()
         try:
             Check_Completeness = {
-                                "id" : damnu_data["id"],
+                                "id" : int(damnu_data["id"]),
                                 "progress" : damnu_data["progress"],
                                 "mode" : damnu_data["mode"],
                                 "fontsize" : damnu_data["fontsize"],
                                 "color" : damnu_data["color"],
                                 "midHash" : damnu_data["midHash"],
                                 "content" : damnu_data["content"],
-                                "ctime" : damnu_data["ctime"],
+                                "ctime" : int(damnu_data["ctime"]),
                                 "idStr" : damnu_data["idStr"],
                                 }
         except:

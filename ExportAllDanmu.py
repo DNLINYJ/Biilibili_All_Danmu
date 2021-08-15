@@ -15,11 +15,11 @@ def ExportAllDanmu(id_num):
     All_TABLE = Danmu_Database.Read_All_TABLE()
     for i in All_TABLE:
         for a in Danmu_Database.Read_TABLE_All_Data(i[0]):
-            Danmu_XML = f'<d p="{str(round(a[2]/1000, 5))},{str(a[3])},{str(a[4])},{str(a[5])},{str(a[8])},0,{str(a[6])},{str(a[1])}">{str(a[7])}</d>'
+            Temp_Str = str(a[7]).replace("<","&lt;").replace(">","&gt;").replace("&","&amp;").replace("\'","&apos;").replace("\"","&quot;")
+            Danmu_XML = f'<d p="{str(round(a[2]/1000, 5))},{str(a[3])},{str(a[4])},{str(a[5])},{str(a[8])},0,{str(a[6])},{str(a[1])}">{Temp_Str}</d>'
             Base_XML = Base_XML + Danmu_XML
             Total_Danmu_Num = Total_Danmu_Num + 1
     
-    Base_XML.replace("1000", str(Total_Danmu_Num), 1)
     Base_XML = Base_XML + "</i>"
 
     Export_Filename = f'{title}_全弹幕导出_{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}.Xml'

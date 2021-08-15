@@ -30,6 +30,20 @@ def LocalBulitTimeList(start_time_year, start_time_month, start_time_day, end_ti
     for i in list(temp_mouth_dict.keys()):
         for a in range(temp_mouth_dict[i]):
             if int(i.split("-")[0]) == end_time_year and int(i.split("-")[1]) == end_time_month:
+                
+                if int(start_time_day) == int(end_time_day):
+                    if len(start_time_day) == 1:
+                        if len(start_time_month) == 1:
+                            time_list.append(str(end_time_year) + "-0" + str(start_time_month) + "-0" + str(end_time_day))
+                        else:
+                            time_list.append(str(end_time_year) + "-" + str(start_time_month) + "-0" + str(end_time_day))
+                    else:
+                        if len(start_time_month) == 1:
+                            time_list.append(str(end_time_year) + "-0" + str(start_time_month) + "-" + str(end_time_day))
+                        else:
+                            time_list.append(str(end_time_year) + "-" + str(start_time_month) + "-" + str(end_time_day))
+                    break
+
                 if a + 1 > int(end_time_day):
                     break
                 else:
