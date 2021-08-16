@@ -188,5 +188,5 @@ def Meum():
             sys.exit(0)
 
 
-
-Meum()
+if __name__ == '__main__':
+    Meum()
