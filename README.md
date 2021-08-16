@@ -52,6 +52,10 @@ python3 main.py
 
 ![9.5万条弹幕导出测试](https://github.com/DNLINYJ/Biilibili_All_Danmu/blob/master/Photos/9.5%E4%B8%87%E6%9D%A1%E5%BC%B9%E5%B9%95%E5%AF%BC%E5%87%BA%E6%B5%8B%E8%AF%95.png "9.5万条弹幕导出测试")
 
+# LICENSE
+
+[Apache-2.0 License](https://github.com/DNLINYJ/Biilibili_All_Danmu/blob/master/LICENSE)
+
 # 致谢
 
 > [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect)  
