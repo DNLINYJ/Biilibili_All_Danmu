@@ -46,7 +46,7 @@ def GetAllDanmuInfo(id_, headers):
 
     # 获取CID时发生错误
     if cid_num == None:
-        return None
+        return 2
 
     # 获得视频标题
     Video_title = GetVideoTitle(bvid, headers)

@@ -64,12 +64,15 @@ def Meum():
             if user_input == "1":
                 os.system(clear_comand_instruction)
 
-                print("请输入B站视频的AV号/BV号,或者输入B站视频地址(仅支持单P视频/多P视频单P下载)")
+                print("请输入B站视频的AV号/BV号,或者输入B站视频地址(仅支持单P视频/多P视频中的单P下载)")
                 user_input = str(input(">>"))
 
                 user_input = FromUrlGetAidOrBvid(user_input)
-                if GetAllDanmuInfo(user_input, headers) == 0:
+                result = GetAllDanmuInfo(user_input, headers)
+                if result == 0:
                     print(f"获取视频：{GetVideoTitle(user_input, headers)} 的所有历史弹幕成功.")
+                    input("按下任意键继续...")
+                elif result == 2:
                     input("按下任意键继续...")
                 else:
                     print(f"获取视频：{GetVideoTitle(user_input, headers)} 的所有历史弹幕失败.")
@@ -114,16 +117,19 @@ def Meum():
             elif user_input == "3":
                 os.system(clear_comand_instruction)
 
-                print("请输入B站视频的AV号/BV号,或者输入B站视频地址(仅支持单P视频)")
+                print("请输入B站视频的AV号/BV号,或者输入B站视频地址(仅支持单P视频/多P视频中的单P下载)")
                 user_input = str(input(">>"))
 
                 user_input = FromUrlGetAidOrBvid(user_input)
-                if GetAllDanmuInfo(user_input, headers) != 0:
+                result = GetAllDanmuInfo(user_input, headers)
+                if result == 0:
                     print(f"获取视频{GetVideoTitle(user_input, headers)} 的所有历史弹幕成功.")
+                    ExportAllDanmu(user_input)
+                    input("按下任意键继续...")
+                elif result == 2:
                     input("按下任意键继续...")
                 else:
                     print(f"获取视频{GetVideoTitle(user_input, headers)} 的所有历史弹幕失败.")
-                    ExportAllDanmu(user_input)
                     input("按下任意键继续...")
 
             elif user_input == "4":
