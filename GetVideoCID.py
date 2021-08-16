@@ -53,20 +53,31 @@ def GetVideoCid(id_, headers, m=0, p=0):
                 return temp_dict
 
             temp_json = json.loads(cid.text)
-            for i in range(len(temp_json['data'])): #输出P数和各自对应的标题
-                print("第%sP,标题为：%s"%(str(temp_json['data'][i]["page"]),str(temp_json['data'][i]['part'])))
+
+            while True:
+                for i in range(len(temp_json['data'])): # 输出P数和各自对应的标题
+                    print("第%sP,标题为：%s"%(str(temp_json['data'][i]["page"]),str(temp_json['data'][i]['part'])))
                 # temp_json['data'][i]["page"] 视频P数
                 # temp_json['data'][i]['part'] 视频标题
 
-            while True:
-                c_num = str(input("请选择需要的P(目前不支持全P下载,仅支持单P下载):")) #c_num 为视频P数 
+                c_num = str(input("请选择需要的P(目前不支持全P下载,仅支持单P下载):")) # c_num 为视频P数 
 
                 if c_num.upper() == "ALL":
                     print("目前不支持全P下载,仅支持单P下载!")
                     os.system(ClearCommandInstruction)
 
-                elif isnum(c_num): # 检查用户输入是否合规
-                    return [str(c_num),str(temp_json['data'][int(c_num)-1]['part']),str(temp_json['data'][int(c_num)-1]['cid'])]
+                # 检查用户输入是否合规
+                elif isnum(c_num): 
+                    if len(temp_json['data']) < int(c_num):
+                        print("请输入正确的选项!")
+                        os.system(ClearCommandInstruction)
+
+                    else:
+                        return [str(c_num),str(temp_json['data'][int(c_num)-1]['part']),str(temp_json['data'][int(c_num)-1]['cid'])]
+
+                else:
+                    print("请输入正确的选项!")
+                    os.system(ClearCommandInstruction)
 
     else:   # 指定P数时 
             # 多P下载单P返回格式： (list) 
