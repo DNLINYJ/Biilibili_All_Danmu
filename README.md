@@ -4,6 +4,8 @@
 <img src="https://img.shields.io/github/v/release/DNLINYJ/Biilibili_All_Danmu.svg?logo=iCloud">
 </p>
 
+## 喜欢或者对您有用的话就给颗Star吧，您的支持是我维护的最大动力(′･ω･`)(准初三
+
 # 准备
 1. Python 3 及以上版本
 
