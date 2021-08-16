@@ -16,6 +16,15 @@ import Sqlite3_Bilibili
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+# From: https://www.cnpython.com/qa/58810
+def remove_bad_chars(string):
+    #all unicode characters from 0x0000 - 0x0020 (33 total) are bad and will be replaced by "" (empty string)
+    temp_list = list(string)
+    for pos in range(len(temp_list)):
+        if ord(temp_list[pos]) < 32:
+            temp_list[pos] = ""
+        return ''.join(temp_list)
+
 def GetAllDanmuInfo(id_, headers):
     if 'BV' in str(id_):
         bvid = id_
@@ -55,7 +64,7 @@ def GetAllDanmuInfo(id_, headers):
 
     # 若数据库中有现处理视频的数据，读取上次最后写入的历史弹幕的日期
     ReadLastEndTime = Index_Database.ReadLastEndTime(bvid)
-    if ReadLastEndTime != None and ReadLastEndTime != []:
+    if ReadLastEndTime:
         start_time_year = int(re.findall(r"(\d{4})", ReadLastEndTime[0][0])[0])
         start_time_month = int(re.findall(r"(-\d{1,2})", ReadLastEndTime[0][0])[0].replace("-",""))
         start_time_day = int(re.findall(r"(-\d{1,2})", ReadLastEndTime[0][0])[1].replace("-",""))
@@ -80,6 +89,10 @@ def GetAllDanmuInfo(id_, headers):
             end_time_month,
             end_time_day
         )
+
+    # 若B站账号未登录
+    elif Time_list == 1:
+        return None
 
     # 向索引数据库中插入历史弹幕数据库的基本信息
     Index_Database_Data = {
@@ -112,13 +125,17 @@ def GetAllDanmuInfo(id_, headers):
         # 获取弹幕文件出错
         if req.status_code != 200:
             Retry_Num = 0
+            if req.status_code == 412:
+                print("B站请求被拦截,暂停本次获取操作.")
+                return 1
             while req.status_code != 200:
 
-                # 重试次数超过15次,直接抛弃该日历史弹幕数据
-                if Retry_Num >= 15:
+                # 重试次数超过2次,直接抛弃该日历史弹幕数据
+                if Retry_Num >= 2:
                     print(f"获取视频:{Video_title} 于{str(i)} 的历史弹幕失败,将跳过该日历史弹幕数据。")
                     Retry_Num = 0
                     Jump_Out_Flag = 1
+                    break
                 
                 print(f"获取视频:{Video_title} 于{str(i)} 的历史弹幕失败,将于3秒后重试,重试次数:{str(Retry_Num)}")
                 time.sleep(3)
@@ -141,6 +158,10 @@ def GetAllDanmuInfo(id_, headers):
         # 将弹幕文件解码为数据库支持的格式
         for i in range(len(danmaku_seg.elems)):
             damnu_data = MessageToDict(danmaku_seg.elems[i])
+
+            # 去除XML文件不能解析的字符
+            damnu_data["content"] = remove_bad_chars(damnu_data["content"])
+
             # 将历史弹幕数据插入数据库
             Database.Add_Danmu_Info(damnu_data)
 

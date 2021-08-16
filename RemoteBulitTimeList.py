@@ -13,9 +13,13 @@ def RemoteBulitTimeList(start_time_year, start_time_month, end_time_year, end_ti
         try:
             req = requests.get(url=get_time_url, headers = headers, verify=False)
         except:
-            return None
+            continue
         if req.status_code != 200: # 当请求被拒绝时，直接跳出使用本地生成
             return None
+
+        if json.loads(req.text)['code'] == -101:
+            print("B站账号未登录,无法获取历史弹幕!")
+            return 1
 
         if json.loads(req.text)['data'] != None:
             get_time_date_json = json.loads(req.text)['data']
@@ -27,5 +31,7 @@ def RemoteBulitTimeList(start_time_year, start_time_month, end_time_year, end_ti
                 start_time_month = 1
             else:
                 start_time_month += 1
+        else:
+            pass
     
     return time_list
