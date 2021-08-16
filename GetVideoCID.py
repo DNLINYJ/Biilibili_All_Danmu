@@ -39,6 +39,10 @@ def GetVideoCid(id_, headers, m=0, p=0):
     search_api = f"https://api.bilibili.com/x/player/pagelist?bvid={str(bvid)}"
     cid = requests.get(url=search_api, headers = headers, verify=False)
 
+    if json.loads(cid.text)['code'] == -404:
+        print("您所寻找的视频在B站服务器不存在!")
+        return None
+
     if p == 0: #当没有指定P数时（默认）
 
         if len(json.loads(cid.text)['data']) == 1: #当只有一个视频时
