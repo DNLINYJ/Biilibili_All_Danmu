@@ -1,6 +1,15 @@
 import requests
 import json
+from GetClearCommandInstruction import GetClearCommandInstruction
+import os
 import bv_dec_or_enc as bv
+
+def isnum(n):
+    try:
+        float(int(n))
+        return True
+    except:
+        return False
 
 def GetVideoCid(id_, headers, m=0, p=0): 
     """
@@ -13,15 +22,14 @@ def GetVideoCid(id_, headers, m=0, p=0):
         (1)单P返回格式: (str)
             "视频cid号"
 
-        (2)多P下载所有返回格式： (dict)
-            {"视频标题1":"视频cid号1","视频标题2":"视频cid号2",...,"视频标题n":"视频cid号n"}
-
         (2)多P下载单P返回格式： (list)
             ["视频P数","视频标题","视频cid号"]
 
         temp_json['videos']['pages'][i]['part'] 或 json.loads(cid.text)['videos']['pages'][i]['part'] 是分P标题 i是视频P数\n
         Cid 和 Oid 本质上是一样的！！！！
     """
+
+    ClearCommandInstruction = GetClearCommandInstruction()
 
     if 'BV' in str(id_): #将BV/AV号转换为BV号
         bvid = id_
@@ -50,15 +58,15 @@ def GetVideoCid(id_, headers, m=0, p=0):
                 # temp_json['data'][i]["page"] 视频P数
                 # temp_json['data'][i]['part'] 视频标题
 
-            c_num = str(input("请选择需要的P:(若全选输入ALL)")) #c_num 为视频P数 
+            while True:
+                c_num = str(input("请选择需要的P(目前不支持全P下载,仅支持单P下载):")) #c_num 为视频P数 
 
-            if c_num.upper() == "ALL":
-                temp_dict = {}
-                for i in range(len(temp_json["data"])):
-                    temp_dict[temp_json['data'][i]['part']] = str(temp_json['data'][i]['cid'])
-                return temp_dict
-            else:
-                return [str(c_num),str(temp_json['data'][int(c_num)-1]['part']),str(temp_json['data'][int(c_num)-1]['cid'])]
+                if c_num.upper() == "ALL":
+                    print("目前不支持全P下载,仅支持单P下载!")
+                    os.system(ClearCommandInstruction)
+
+                elif isnum(c_num): # 检查用户输入是否合规
+                    return [str(c_num),str(temp_json['data'][int(c_num)-1]['part']),str(temp_json['data'][int(c_num)-1]['cid'])]
 
     else:   # 指定P数时 
             # 多P下载单P返回格式： (list) 

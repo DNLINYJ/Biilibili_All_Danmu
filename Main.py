@@ -59,7 +59,7 @@ def Meum():
             if user_input == "1":
                 os.system(clear_comand_instruction)
 
-                print("请输入B站视频的AV号/BV号,或者输入B站视频地址(仅支持单P视频)")
+                print("请输入B站视频的AV号/BV号,或者输入B站视频地址(仅支持单P视频/多P视频单P下载)")
                 user_input = str(input(">>"))
 
                 user_input = FromUrlGetAidOrBvid(user_input)

@@ -47,6 +47,15 @@ def GetAllDanmuInfo(id_, headers):
     # 获得视频标题
     Video_title = GetVideoTitle(bvid, headers)
 
+    # 检测是否为分P视频
+    if type(cid_num) == list:
+        Video_title = Video_title + " - " + cid_num[1]
+        cid_num = cid_num[2]
+
+    # 获取CID时发生错误
+    elif cid_num == None:
+        return None
+
     # 获得历史弹幕时间列表的时间范围
     start_time_year = int(re.findall(r"(\d{4})", infos)[0])
     start_time_month = int(re.findall(r"(-\d{1,2})", infos)[0].replace("-",""))
