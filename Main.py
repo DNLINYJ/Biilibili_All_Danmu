@@ -46,6 +46,11 @@ def Meum():
             input("按下任意键退出...")
             sys.exit(0)
         else:
+            if os.path.exists("sqlite3") == False:
+                os.makedirs("sqlite3")
+            if os.path.exists("Export") == False:
+                os.makedirs("Export")
+
             print("B站全弹幕获取程序")
             print("作者：菠萝小西瓜(DNLINYJ)")
             print("Github：https://github.com/DNLINYJ")
