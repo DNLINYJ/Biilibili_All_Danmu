@@ -103,13 +103,13 @@ def Meum():
         if os.path.exists("Export") == False:
             os.makedirs("Export")
 
-        print("B站全弹幕获取程序")
+        print("Bilibili(B站)全弹幕获取程序")
         print("作者：菠萝小西瓜(DNLINYJ)")
         print("Github：https://github.com/DNLINYJ")
         print("注意：仅供个人学习交流使用，切勿用于非法用途！")
         print("---------------------------------------------------------")
-        print("1) 收集指定视频全部历史弹幕")
-        print("2) 导出指定视频全部历史弹幕")
+        print("1) 收集指定视频全部历史弹幕(数据量较大时所用时间较久)")
+        print("2) 导出数据库内指定视频全部历史弹幕")
         print("3) 收集并导出指定视频全部历史弹幕(数据量较大时所用时间较久,谨慎使用)")
         print("4) 退出")
         user_input = str(input(">>"))
