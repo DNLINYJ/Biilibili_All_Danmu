@@ -82,6 +82,7 @@ def GetAllDanmuInfo(id_, headers):
     Time_list = RemoteBulitTimeList(
         start_time_year,
         start_time_month,
+        start_time_day,
         end_time_year,
         end_time_month,
         cid_num,

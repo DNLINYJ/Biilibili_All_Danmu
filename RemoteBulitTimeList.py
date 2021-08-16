@@ -1,7 +1,9 @@
+import time
 import requests
+import re
 import json
 
-def RemoteBulitTimeList(start_time_year, start_time_month, end_time_year, end_time_month, cid_num, headers):
+def RemoteBulitTimeList(start_time_year, start_time_month, start_time_day, end_time_year, end_time_month, cid_num, headers):
     time_list = list()
 
     for i in range(abs((start_time_year - end_time_year) * 12 + (start_time_month - end_time_month) * 1) + 1):
@@ -33,5 +35,12 @@ def RemoteBulitTimeList(start_time_year, start_time_month, end_time_year, end_ti
                 start_time_month += 1
         else:
             pass
+
+    # 修复远程构建历史弹幕时间列表 无法根据上次最后存档点 断点续传的BUG
+    for i in range(len(time_list)):
+        if start_time_year == int(re.findall(r"(\d{4})", time_list[i])[0]):
+            if start_time_month == int(re.findall(r"(-\d{1,2})", time_list[i])[0].replace("-","")):
+                if start_time_day == int(re.findall(r"(-\d{1,2})", time_list[i])[1].replace("-","")):
+                    time_list = time_list[i::]
     
     return time_list
