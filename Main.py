@@ -36,6 +36,11 @@ def FromUrlGetAidOrBvid(video_url):
     return video_url
 
 def Meum():
+    if os.path.exists("sqlite3") == False:
+            os.makedirs("sqlite3")
+    if os.path.exists("Export") == False:
+            os.makedirs("Export")
+            
     clear_comand_instruction = GetClearCommandInstruction()
     Index_Server = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server("root", "root")
 
@@ -87,7 +92,7 @@ def Meum():
                 if "SESSDATA=" in user_input.upper():
                     with open(".config", "w", encoding="utf-8") as f:
                         f.write(base64.b64encode(user_input.encode("utf-8")).decode())
-                    headers["cookie"] = temp_sessdata
+                    headers["cookie"] = user_input
                 else:
                     print("请输入正确格式的SESSDATA!")
                     os.system(clear_comand_instruction)
@@ -97,11 +102,6 @@ def Meum():
                 print("请查看文档进行登录!!")
                 input("按下任意键退出...")
                 sys.exit(0)
-
-        if os.path.exists("sqlite3") == False:
-            os.makedirs("sqlite3")
-        if os.path.exists("Export") == False:
-            os.makedirs("Export")
 
         print("Bilibili(B站)全弹幕获取程序")
         print("作者：菠萝小西瓜(DNLINYJ)")

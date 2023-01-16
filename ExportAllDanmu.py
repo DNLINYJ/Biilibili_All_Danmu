@@ -1,6 +1,7 @@
 import Sqlite3_Bilibili
 import time
 import re
+import base64
 
 def ExportAllDanmu(id_num):
     cid = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server("root","root").Find_Cid(id_num)[0][0]
@@ -16,7 +17,7 @@ def ExportAllDanmu(id_num):
     Danmu_XML_Temp_Str = str()
     for i in All_TABLE:
         for a in Danmu_Database.Read_TABLE_All_Data(i[0]):
-            Temp_Str = str(a[7]).replace("<","&lt;").replace(">","&gt;").replace("&","&amp;").replace("\'","&apos;").replace("\"","&quot;")
+            Temp_Str = str(base64.b64decode(a[7]).decode()).replace("<","&lt;").replace(">","&gt;").replace("&","&amp;").replace("\'","&apos;").replace("\"","&quot;")
             Danmu_XML = f'<d p="{str(round(a[2]/1000, 5))},{str(a[3])},{str(a[4])},{str(a[5])},{str(a[8])},0,{str(a[6])},{str(a[1])}">{Temp_Str}</d>'
             Danmu_XML_Temp_Str = Danmu_XML_Temp_Str + Danmu_XML
             Total_Danmu_Num = Total_Danmu_Num + 1

@@ -1,5 +1,5 @@
-from ExportAllDanmu import ExportAllDanmu
 import sqlite3
+import base64
 import time
 import bv_dec_or_enc as bv
 # https://www.cnblogs.com/desireyang/p/12102143.html
@@ -36,7 +36,7 @@ class Bilibili_Danmu_Server():
         # fontsize INTEGER              弹幕字号
         # color    INTEGER              弹幕颜色
         # midHash  TEXT                 发送者mid的HASH
-        # content  TEXT                 弹幕内容
+        # content  TEXT                 弹幕内容(base64)
         # ctime    INT8                 弹幕发送时间
         # idStr    TEXT                 弹幕dmid
 
@@ -50,7 +50,7 @@ class Bilibili_Danmu_Server():
                                 "fontsize" : damnu_data["fontsize"],
                                 "color" : damnu_data["color"],
                                 "midHash" : damnu_data["midHash"],
-                                "content" : damnu_data["content"],
+                                "content" : base64.b64encode(damnu_data["content"].encode()).decode(),
                                 "ctime" : int(damnu_data["ctime"]),
                                 "idStr" : damnu_data["idStr"],
                                 }
