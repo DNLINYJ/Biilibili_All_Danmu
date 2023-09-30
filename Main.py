@@ -153,7 +153,7 @@ def Meum():
                     os.system(clear_comand_instruction)
 
                 else:
-                    if int(user_input) > len(Video_Info_List) + 1:
+                    if int(user_input) > len(Video_Info_List):
                         print("请输入正确的选项!")
                         input("按下回车继续运行...")
                     else:
