@@ -157,7 +157,7 @@ def Meum():
                         print("请输入正确的选项!")
                         input("按下回车继续运行...")
                     else:
-                        ExportAllDanmu(Video_Info_List[i][2])
+                        ExportAllDanmu(Video_Info_List[int(user_input) - 1][2])
                         input("按下回车继续运行...")
                         os.system(clear_comand_instruction)
             
