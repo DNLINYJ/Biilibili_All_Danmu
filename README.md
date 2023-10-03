@@ -1,9 +1,5 @@
 <h1 align="center">- Bilibili(B站)全弹幕获取程序 -</h3>
 
-<p align="center">
-<img src="https://img.shields.io/github/v/release/DNLINYJ/Biilibili_All_Danmu.svg?logo=iCloud">
-</p>
-
 ## 喜欢或者对您有用的话就给颗Star吧，您的支持是我维护的最大动力(′･ω･`)
 
 # 准备
