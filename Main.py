@@ -104,7 +104,7 @@ def Meum():
                 sys.exit(0)
 
         print("Bilibili(B站)全弹幕获取程序")
-        print("作者：菠萝小西瓜(DNLINYJ)")
+        print("作者：DNLINYJ")
         print("Github：https://github.com/DNLINYJ")
         print("注意：仅供个人学习交流使用，切勿用于非法用途！")
         print("---------------------------------------------------------")
