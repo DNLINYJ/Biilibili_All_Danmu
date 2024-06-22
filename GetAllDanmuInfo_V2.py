@@ -78,6 +78,8 @@ def GetAllDanmuInfo(id_, headers):
         start_time_month = int(re.findall(r"(-\d{1,2})", ReadLastEndTime[0][0])[0].replace("-",""))
         start_time_day = int(re.findall(r"(-\d{1,2})", ReadLastEndTime[0][0])[1].replace("-",""))
 
+    # Todo: 根据所获取最晚弹幕时间进行弹幕持续时间构建 (from issus #3)
+
     # 远程构建时间范围列表
     Time_list = RemoteBulitTimeList(
         start_time_year,

@@ -17,13 +17,18 @@ def RemoteBulitTimeList(start_time_year, start_time_month, start_time_day, end_t
             continue
         if req.status_code != 200: # 当请求被拒绝时，直接跳出使用本地生成
             return None
+        
+        response_json = json.loads(req.text)
 
-        if json.loads(req.text)['code'] == -101:
+        if response_json['code'] == -101:
             print("B站账号未登录,无法获取历史弹幕!")
             return 1
+        
+        if response_json['code'] == -400: # 请求错误 直接跳转本地构建 issus #3
+            return None
 
-        if json.loads(req.text)['data'] != None:
-            get_time_date_json = json.loads(req.text)['data']
+        if response_json['data'] != None:
+            get_time_date_json = response_json['data']
             for time_date in get_time_date_json:
                 time_list.append(time_date)
             if start_time_month == 12:  
