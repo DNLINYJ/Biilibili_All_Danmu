@@ -4,9 +4,9 @@ import re
 import base64
 
 def ExportAllDanmu(id_num):
-    cid = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server("root","root").Find_Cid(id_num)[0][0]
-    title = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server("root","root").Find_Cid(id_num)[0][1]
-    Danmu_Database = Sqlite3_Bilibili.Bilibili_Danmu_Server("root", "root", str(cid) + ".db")
+    cid = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server().Find_Cid(id_num)[0][0]
+    title = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server().Find_Cid(id_num)[0][1]
+    Danmu_Database = Sqlite3_Bilibili.Bilibili_Danmu_Server(str(cid) + ".db")
 
     # 打印日志
     print(f"正在导出视频:{title} 的全部历史弹幕.")

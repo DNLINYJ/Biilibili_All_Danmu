@@ -5,10 +5,8 @@ import bv_dec_or_enc as bv
 # https://www.cnblogs.com/desireyang/p/12102143.html
 
 class Bilibili_Danmu_Server():
-    def __init__(self, username, password, database_file):
+    def __init__(self, database_file):
         #Set base information
-        self.username = username
-        self.password = password
         self.database_file = "sqlite3/" + database_file
 
         # Init Sqlite3 database
@@ -93,10 +91,8 @@ class Bilibili_Danmu_Server():
         self.server_connent.close()
 
 class Bilibili_Danmu_Index_Server():
-    def __init__(self, username, password):
-        #Set base information
-        self.username = username
-        self.password = password
+    def __init__(self):
+        # Set base information
         self.database_file = "sqlite3/index.db"
 
         # Init Sqlite3 database

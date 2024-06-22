@@ -67,9 +67,9 @@ def GetAllDanmuInfo(id_, headers):
     
     # 初始化历史弹幕数据库和索引数据库 数据库用户名和密码默认为 root/root
     # 历史弹幕数据库
-    Database = Sqlite3_Bilibili.Bilibili_Danmu_Server("root", "root", f"{str(cid_num)}.db")
+    Database = Sqlite3_Bilibili.Bilibili_Danmu_Server(f"{str(cid_num)}.db")
     # 索引数据库
-    Index_Database = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server("root", "root")
+    Index_Database = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server()
 
     # 若数据库中有现处理视频的数据，读取上次最后写入的历史弹幕的日期
     ReadLastEndTime = Index_Database.ReadLastEndTime(bvid)
