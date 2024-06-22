@@ -26,7 +26,7 @@ def ExportAllDanmu(id_num):
 
     Export_Filename = f'{title}_全弹幕导出_{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}.Xml'
     Export_Filename = re.sub(r"[\/\\\:\*\?\"\<\>\|]","_", Export_Filename)
-    with open("Export/" + Export_Filename,"w",encoding="utf-8") as f:
+    with open("export/" + Export_Filename,"w",encoding="utf-8") as f:
         f.write(Base_XML)
 
     print(f"导出视频:{title} 的全部历史弹幕成功.")

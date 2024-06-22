@@ -7,7 +7,7 @@ import bv_dec_or_enc as bv
 class Bilibili_Danmu_Server():
     def __init__(self, database_file):
         #Set base information
-        self.database_file = "sqlite3/" + database_file
+        self.database_file = "database/" + database_file
 
         # Init Sqlite3 database
         if ".DB" not in str(self.database_file).upper():
@@ -93,7 +93,7 @@ class Bilibili_Danmu_Server():
 class Bilibili_Danmu_Index_Server():
     def __init__(self):
         # Set base information
-        self.database_file = "sqlite3/index.db"
+        self.database_file = "database/index.db"
 
         # Init Sqlite3 database
         if ".DB" not in str(self.database_file).upper():

@@ -36,13 +36,13 @@ def FromUrlGetAidOrBvid(video_url):
     return video_url
 
 def Meum():
-    if os.path.exists("sqlite3") == False:
-            os.makedirs("sqlite3")
-    if os.path.exists("Export") == False:
-            os.makedirs("Export")
+    if os.path.exists("database") == False:
+            os.makedirs("database")
+    if os.path.exists("export") == False:
+            os.makedirs("export")
             
     clear_comand_instruction = GetClearCommandInstruction()
-    Index_Server = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server("root", "root")
+    Index_Server = Sqlite3_Bilibili.Bilibili_Danmu_Index_Server()
 
     if os.path.exists(".config") == False:
         while True:
