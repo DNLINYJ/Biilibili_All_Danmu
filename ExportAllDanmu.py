@@ -24,7 +24,7 @@ def ExportAllDanmu(id_num):
     
     Base_XML = Base_XML_List[0] + str(Total_Danmu_Num) + Base_XML_List[1] + Danmu_XML_Temp_Str + "</i>"
 
-    Export_Filename = f'{title}_全弹幕导出_{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}.Xml'
+    Export_Filename = f'{title}_全弹幕导出_{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}.xml'
     Export_Filename = re.sub(r"[\/\\\:\*\?\"\<\>\|]","_", Export_Filename)
     with open("export/" + Export_Filename,"w",encoding="utf-8") as f:
         f.write(Base_XML)
