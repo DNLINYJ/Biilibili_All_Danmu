@@ -60,7 +60,7 @@ def GetVideoCid(id_, headers, m=0, p=0):
 
             while True:
                 for i in range(len(temp_json['data'])): # 输出P数和各自对应的标题
-                    print("第%sP,标题为：%s"%(str(temp_json['data'][i]["page"]),str(temp_json['data'][i]['part'])))
+                    print("第 %sP 标题为: %s"%(str(temp_json['data'][i]["page"]),str(temp_json['data'][i]['part'])))
                 # temp_json['data'][i]["page"] 视频P数
                 # temp_json['data'][i]['part'] 视频标题
 
