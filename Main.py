@@ -54,7 +54,7 @@ def Meum():
             if "SESSDATA=" in user_input.upper():
                 with open(".config", "w", encoding="utf-8") as f:
                     f.write(base64.b64encode(user_input.encode("utf-8")).decode())
-                break
+                headers["cookie"] = user_input
             else:
                 print("请输入正确格式的SESSDATA!")
                 os.system(clear_comand_instruction)
@@ -74,7 +74,7 @@ def Meum():
             if "SESSDATA=" in user_input.upper():
                 with open(".config", "w", encoding="utf-8") as f:
                     f.write(base64.b64encode(user_input.encode("utf-8")).decode())
-                headers["cookie"] = temp_sessdata
+                headers["cookie"] = user_input
             else:
                 print("请输入正确格式的SESSDATA!")
                 os.system(clear_comand_instruction)
