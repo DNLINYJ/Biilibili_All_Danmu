@@ -1,20 +1,29 @@
-table='fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF'
-tr={}
-for i in range(58):
-	tr[table[i]]=i
-s=[11,10,3,8,4,6,2,9,5,7]
-xor=177451812
-add=100618342136696320
+XOR_CODE = 23442827791579
+MASK_CODE = 2251799813685247
+MAX_AID = 1 << 51
+ALPHABET = "FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf"
+ENCODE_MAP = 8, 7, 0, 5, 1, 3, 2, 4, 6
+DECODE_MAP = tuple(reversed(ENCODE_MAP))
 
-def dec(x):
-	r=0
-	for i in range(10):
-		r+=tr[x[s[i]]]*58**i
-	return (r-add)^xor
+BASE = len(ALPHABET)
+PREFIX = "BV1"
+PREFIX_LEN = len(PREFIX)
+CODE_LEN = len(ENCODE_MAP)
 
-def enc(x):
-	x=(x^xor)+add
-	r=list('BV          ')
-	for i in range(10):
-		r[s[i]]=table[x//58**i%58]
-	return ''.join(r)
+def enc(aid: int) -> str:
+    bvid = [""] * 9
+    tmp = (MAX_AID | aid) ^ XOR_CODE
+    for i in range(CODE_LEN):
+        bvid[ENCODE_MAP[i]] = ALPHABET[tmp % BASE]
+        tmp //= BASE
+    return PREFIX + "".join(bvid)
+
+def dec(bvid: str) -> int:
+    assert bvid[:3] == PREFIX
+
+    bvid = bvid[3:]
+    tmp = 0
+    for i in range(CODE_LEN):
+        idx = ALPHABET.index(bvid[DECODE_MAP[i]])
+        tmp = tmp * BASE + idx
+    return (tmp & MASK_CODE) ^ XOR_CODE
