@@ -20,6 +20,10 @@ def RemoteBulitTimeList(start_time_year, start_time_month, start_time_day, end_t
         
         response_json = json.loads(req.text)
 
+        # 当前月份无弹幕文件
+        if response_json['data'] == None:
+            continue
+
         if response_json['code'] == -101:
             print("B站账号未登录,无法获取历史弹幕!")
             return 1

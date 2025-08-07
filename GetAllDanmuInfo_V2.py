@@ -8,6 +8,7 @@ from LocalBulitTimeList import LocalBulitTimeList
 from RemoteBulitTimeList import RemoteBulitTimeList
 import dm_protobuf.dm_pb2 as dm_pb2
 from google.protobuf.json_format import MessageToDict
+from datetime import datetime
 import Sqlite3_Bilibili
 
 #关闭requests模块的InsecureRequestWarning警告提示
@@ -32,12 +33,13 @@ def GetAllDanmuInfo(id_, headers):
         bvid = bv.enc(int(str(id_).upper().replace("AV","")))
 
     # 获得视频投稿时间
-    web_url = f"https://www.bilibili.com/video/{bvid}"
+    web_url = f"https://api.bilibili.com/x/web-interface/view?bvid={bvid}"
     start_time_req = requests.get(url=web_url, headers = headers, verify=False)
+    pub_date = start_time_req.json()['data']['pubdate']
 
     # 使用正则表达式获得视频投稿时间
     try: 
-        infos = re.findall(r'<meta data-vue-meta="true" itemprop="uploadDate" content="(.*)"><meta data-vue-meta="true" itemprop="datePublished"', start_time_req.text)[0]
+        infos = datetime.fromtimestamp(pub_date)
     except:
         return None
 
@@ -57,9 +59,9 @@ def GetAllDanmuInfo(id_, headers):
         cid_num = cid_num[2]
 
     # 获得历史弹幕时间列表的时间范围
-    start_time_year = int(re.findall(r"(\d{4})", infos)[0])
-    start_time_month = int(re.findall(r"(-\d{1,2})", infos)[0].replace("-",""))
-    start_time_day = int(re.findall(r"(-\d{1,2})", infos)[1].replace("-",""))
+    start_time_year = infos.year
+    start_time_month = infos.month
+    start_time_day = infos.day
     
     end_time_year = int(time.strftime('%Y',time.localtime(time.time())))
     end_time_month = int(time.strftime('%m',time.localtime(time.time())))
@@ -132,7 +134,10 @@ def GetAllDanmuInfo(id_, headers):
 
         # 获取历史弹幕文件
         get_his_danmu_url = f"https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid={str(cid_num)}&date={str(i)}"
-        req = requests.get(url = get_his_danmu_url, headers = headers, verify=False)
+        try:
+            req = requests.get(url = get_his_danmu_url, headers = headers, verify=False)
+        except:
+            req.status_code = 444
 
         # 获取弹幕文件出错
         if req.status_code != 200:
@@ -152,13 +157,26 @@ def GetAllDanmuInfo(id_, headers):
                 print(f"获取视频:{Video_title} 于{str(i)} 的历史弹幕失败,将于3秒后重试,重试次数:{str(Retry_Num)}")
                 time.sleep(3)
                 Retry_Num += 1
-                req = requests.get(url=get_his_danmu_url, headers = headers, verify=False)
+                try:
+                    req = requests.get(url=get_his_danmu_url, headers = headers, verify=False)
+                except:
+                    req.status_code = 444
 
         # 跳过当前日期的历史弹幕
         if Jump_Out_Flag == 1:
             # 标识符归位
             Jump_Out_Flag = 0
             continue
+
+        if req.text == "":
+            print(f"视频:{Video_title} 于{str(i)} 的历史弹幕为空,将跳过该日历史弹幕数据。")
+            #time.sleep(3)
+            continue
+
+        # code -702 触发风控 请求频率过高 停止爬取
+        if req.headers['Content-Type'] == 'application/json; charset=utf-8' and req.json()['code'] == -702:
+            print("请求频率过高，请稍后再试")
+            return None
 
         # 使用Protobuf脚本解码B站弹幕文件
         # From 1:https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/danmaku/history.md
